@@ -1,0 +1,16 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "gcr.io/tev-msgcenter/tev-msgcenter:$COMMIT_SHA", "."]
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/tev-msgcenter/tev-msgcenter:$COMMIT_SHA"]
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      - "run"
+      - "deploy"
+      - "tev-msgcenter"
+      - "--image"
+      - "gcr.io/tev-msgcenter/tev-msgcenter:$COMMIT_SHA"
+      - "--region"
+      - "asia-east1"
+      - "--platform"
+      - "managed"
