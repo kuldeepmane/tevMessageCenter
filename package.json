@@ -1,0 +1,22 @@
+{
+  "name": "tevmessagecenter",
+  "version": "1.0.0",
+  "description": "Storing the messages",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kuldeepmane/tevMessageCenter.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kuldeepmane/tevMessageCenter/issues"
+  },
+  "homepage": "https://github.com/kuldeepmane/tevMessageCenter#readme",
+  "dependencies": {
+    "mongoose": "^5.10.5"
+  }
+}
