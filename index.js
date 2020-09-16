@@ -1,29 +1,31 @@
 const mongoose = require("mongoose");
+
+const app = require("express")();
+const cors = require("cors");
+const bodyParser = require("body-parser");
+
+app.use(cors());
+app.use(bodyParser.json());
+
 const MONGODB_URI =
   "mongodb+srv://owner:password91@cluster0.sptac.mongodb.net/tev?retryWrites=true&w=majority";
 
-let dbConn = null;
+const PORT = process.env.PORT || 8080;
 
-function connectToDatabase(uri) {
-  console.log("=> connect to database");
+mongoose
+  .connect(MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("DB connnection successful!"));
 
-  if (dbConn) {
-    console.log("=> using cached database instance");
-    return Promise.resolve(dbConn);
-  }
+app.listen(PORT, () => {
+  console.log(`Example app listening at port ${PORT}`);
+});
 
-  return mongoose
-    .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then((db) => {
-      dbConn = db;
-      return dbConn;
-    });
-}
-
-exports.saveMessage = async (req, res) => {
+app.post("/saveMesssage", async (req, res) => {
   try {
-    let db = await connectToDatabase(MONGODB_URI);
-    const message = db.model("messageCenter", {
+    const message = mongoose.model("messageCenter", {
       messageTimestamp: { type: Number },
       message: { type: String },
       mobileNumber: { type: Number },
@@ -35,11 +37,10 @@ exports.saveMessage = async (req, res) => {
       mobileNumber: req.body.mobileNumber,
     });
 
-    let dbResp = await newMessage.save();
-    res.status(200).send(dbResp);
+    await newMessage.save();
+    res.status(200).send({ success: true, message: "Data Saved" });
   } catch (error) {
-    res.status(400).send(error);
+    console.log(error);
+    return res.status(400).send({ success: false, message: error.message });
   }
-};
-
-// saveMessage();           //!! use for local testing only
+});
